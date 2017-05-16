@@ -1,4 +1,10 @@
 public class Test11 {
+	
+	private int[] count = {4, 4, 0, 0, 0, 20};
+	private int[] eachAmt = {100, 50, 20, 10, 5, 1};
+	private boolean[] isCount = {false, false, true, true, true, true};
+	private int balance = 0;
+	
 	public static void main(String[] args) {
 		
 		// 1,000,000 원으로 
@@ -9,7 +15,7 @@ public class Test11 {
 		// 4 ,4, 4, 3, 4, 25장
 		
 		//환율 1320
-		int exRate = 1320;
+		int exRate = 1322;
 		int totalAmt = 1000000;
 	
 		Test11 test = new Test11();
@@ -17,60 +23,46 @@ public class Test11 {
 		test.show(result);
 	}
 	public int[] calculation(int exRate, int totalAmt){
-		int[] count = {4, 4, 0, 0, 0, 20};
-		int[] eachAmt = {100, 50, 20, 10, 5, 1};
-		boolean[] isCount = {false, false, true, true, true, true};
-		int sum = 0;
-		int balance = 0;
+		int sum = 0, loc = 0;
+		int countSize = count.length;
 		
-		while(true){
-			if ( sum > totalAmt)
-				break;
+		// 합계 금액과 잔돈이 목표 금액이 도달하면 종료
+		while(sum + balance != totalAmt) {
+			// 합계 초기화
 			sum = 0;
-			balance = 0;
 			
-			for(int i=0; i<count.length; i++){
-				if (isCount[i])
-					count[i]++;
-				
+			for(int i=0; i < countSize; i++){
 				sum += count[i] * eachAmt[i] * exRate;
-				System.out.print("합계 금액 : "+ sum + ", ");
-				show(count);
-				
-				if( sum > totalAmt - 2000){
-					count[i]--;
-					isCount[i] = false;
-					balance = totalAmt - sum - eachAmt[i];
-					System.out.println(i +","+balance);
-				}
-				
-				
-				
+			}	
+			
+			// 합계가 넘었을 때
+			if (sum > totalAmt){
+				count[loc-1]--;
+				isCount[loc-1] = false;
+				continue;
+			} else { 
+				if(isCount[loc])
+					count[loc]++;
 			}
-			
-			System.out.println("---------------");
-			System.out.println("                   합계 금액 : "+ sum);
-			show(count);
-			System.out.println("---------------");
-			
-			
+				
+			// 나머지가 2000원 미만이면 잔돈 계산
+			if (totalAmt - sum < 2000){
+				balance = totalAmt - sum; 
+			}
+			loc = (loc+1) % countSize;
 		}
+		
 		return count;
 	}
 	
 	public void show(int[] count){
-//		System.out.print("100N : " + count[0] +"장, ");
-//		System.out.print("50N : " + count[1] +"장, ");
-//		System.out.print("20N : " + count[2] +"장, ");
-//		System.out.print("10N : " + count[3] +"장, ");
-//		System.out.print("5N : " + count[4] +"장, ");
-//		System.out.println("1N : " + count[5] +"장");
-		
-		System.out.print(count[0] +", ");
-		System.out.print(count[1] +", ");
-		System.out.print(count[2] +", ");
-		System.out.print(count[3] +", ");
-		System.out.print(count[4] +", ");
-		System.out.println(count[5]);
+		System.out.println("100N : " + count[0] +"장, ");
+		System.out.println("50N : " + count[1] +"장, ");
+		System.out.println("20N : " + count[2] +"장, ");
+		System.out.println("10N : " + count[3] +"장, ");
+		System.out.println("5N : " + count[4] +"장, ");
+		System.out.println("1N : " + count[5] +"장");
+		System.out.println("잔액 : " + balance );
+
 	}
 }
